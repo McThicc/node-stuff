@@ -1,11 +1,10 @@
 const fs = require('fs');
 const prompt = require('prompt-sync')();
 
-const create = prompt("Do you want to sign up or login? Enter 'sign up' or 'login'\n");
-const formattedcreate = create.replace(/\s+/g, '').toLowerCase();
+const create = prompt("Do you want to sign up or login? Enter 'sign up' or 'login': ");
+const formattedCreate = create.replace(/\s+/g, '').toLowerCase();
 
-if (formattedcreate === 'signup') {
-
+if (formattedCreate === 'signup') {
     const name = prompt('Enter your name: ');
     const userName = prompt('Choose a username: ');
     const passWord = prompt('Choose a password: ');
@@ -14,27 +13,23 @@ if (formattedcreate === 'signup') {
     writeUser.write(`${userName}\n`);
     writeUser.write(`${passWord}\n`);
 
-} else if (formattedcreate === 'login') {
-
+} else if (formattedCreate === 'login') {
     const name = prompt('Enter your name: ');
-    const userName = prompt('Choose a username: ');
-    const passWord = prompt('Choose a password: ');
+    const userName = prompt('Enter your username: ');
+    const passWord = prompt('Enter your password: ');
 
-    const writeUser = fs.createWriteStream(`./tempUsers/tempUser_${name}.txt`);
-    writeUser.write(`${userName}\n`);
-    writeUser.write(`${passWord}\n`);
-
-    fs.readFile(`./tempUsers/${name}.txt`, (err, data1) => {
-        if (err) throw err;
-        fs.readFile(`./users/${name}.txt`, (err, data2) => {
-            if (err) throw err;
-            if (data1.equals(data2)) {
-                console.log('Logged in successfully')
-            } else {
-                console.log("Info didn't match");
-            }
-        })
-    })
-
-    fs.unlinkSync(`./tempUsers/tempUser_${name}.txt`);
+    fs.readFile(`./users/user_${name}.txt`, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading file:', err.message);
+            return;
+        }
+        const [storedUserName, storedPassWord] = data.trim().split('\n');
+        if (userName === storedUserName && passWord === storedPassWord) {
+            console.log('Logged in successfully');
+        } else {
+            console.log("Info didn't match");
+        }
+    });
+} else {
+    console.log("Invalid choice. Please enter 'signup' or 'login'.");
 }
