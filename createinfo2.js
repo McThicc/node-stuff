@@ -8,7 +8,7 @@ console.log('---------------------------------------------------------------');
 const intro = prompt();
 const answer = intro.replace(/\s+/g, '').toLowerCase();
 
-var users;
+let users;
 fs.readdir('./users', (err, files) => {
     if (err) {
         console.error('Error reading user directory');
@@ -22,7 +22,12 @@ if (answer === 'signup') {
     console.log('---------------------------------------------------------------');
     const name = prompt('Enter your name: ');
     console.log('---------------------------------------------------------------');
-    const username = prompt('Choose a username: ');
+    let username = prompt('Choose a username: ');
+    for (let i = 0; i < files.length(); i++) {
+        if (username === files[i]) {
+            username = prompt('That username has already been taken, please pick another: ');
+        }
+    }
     console.log('---------------------------------------------------------------');
     const password = prompt('Choose a password: ');
     console.log('---------------------------------------------------------------');
